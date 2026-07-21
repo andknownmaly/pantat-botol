@@ -31,7 +31,7 @@
     </div>
     <div id="controls">
       <!-- Ambient audio is optional. Drop assets/ambient.mp3 to enable it. -->
-      <button id="audio-toggle" class="ghost-btn" aria-label="toggle sound" title="ambient sound">♪ off</button>
+      <button id="audio-toggle" class="ghost-btn" aria-label="toggle sound" title="ambient sound">♪ on</button>
       <button id="restart-top" class="ghost-btn" aria-label="restart journey" title="start over">↺</button>
     </div>
   </header>
@@ -51,7 +51,7 @@
   <footer id="footer"><span>&nbsp;</span></footer>
 
   <!-- Optional ambient audio element. Silent until you add the file. -->
-  <audio id="ambient" loop preload="none">
+  <audio id="ambient" loop preload="auto">
     <source src="assets/ambient.mp3" type="audio/mpeg" />
   </audio>
 
