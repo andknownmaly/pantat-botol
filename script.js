@@ -1,17 +1,3 @@
-/* =============================================================
-   script.js — the engine
-   ---------------------------------------------------------------
-   Responsibilities:
-     • persistence (LocalStorage): which challenges are solved
-     • ambient particle field
-     • typewriter effect
-     • mounting challenges one at a time, and the fragment reveal
-     • the progress indicator + slowly shifting atmosphere
-     • the fake ending, then the real ending (markdown viewer)
-
-   No frameworks. No network. Fully offline.
-   ============================================================= */
-
 (function () {
   "use strict";
 
@@ -290,7 +276,7 @@
     "",
     "Some hopes fall apart before they ever have the chance to become real.",
     "",
-    "All that remains is a faint trace of its fragrance just enough to remind me that there was once something I had hoped to carry into a beautiful day.",
+    "All that remains is a faint trace of its fragrance just enough to remind me that thhoped to carry into a beautiful day.",
     "",
     "--------------------------------",
   ].join("\n");
@@ -405,7 +391,26 @@
   /* ---------- controls: audio + restart + journal ---------- */
   function initControls() {
     const audioBtn = document.getElementById("audio-toggle");
-    let playing = true;
+    let playing = true;                 // state default: ON
+    if (audioBtn) audioBtn.textContent = "♪ on";
+
+    function startAmbient() {
+      if (!ambient) return;
+      const pr = ambient.play();
+      if (pr && pr.catch) {
+        pr.catch(() => {
+          const kick = () => {
+            if (playing) { const p2 = ambient.play(); if (p2 && p2.catch) p2.catch(() => {}); }
+            window.removeEventListener("pointerdown", kick);
+            window.removeEventListener("keydown", kick);
+          };
+          window.addEventListener("pointerdown", kick, { once: true });
+          window.addEventListener("keydown", kick, { once: true });
+        });
+      }
+    }
+    startAmbient();
+
     audioBtn.addEventListener("click", () => {
       if (!ambient) return;
       if (playing) { ambient.pause(); audioBtn.textContent = "♪ off"; playing = false; }
@@ -429,8 +434,6 @@
 
   /* ---------- boot ---------- */
   function boot() {
-    // always begin from the very start on every visit —
-    // wipe any saved progress so no session ever resumes mid-story.
     try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
     state = { solved: [], fragments: {}, finished: false };
 
@@ -439,7 +442,6 @@
     updateProgress();
     refreshJournal();
 
-    // always open on the first challenge
     showChallenge(0);
   }
 
