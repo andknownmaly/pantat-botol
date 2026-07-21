@@ -429,21 +429,18 @@
 
   /* ---------- boot ---------- */
   function boot() {
+    // always begin from the very start on every visit —
+    // wipe any saved progress so no session ever resumes mid-story.
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    state = { solved: [], fragments: {}, finished: false };
+
     initParticles();
     initControls();
     updateProgress();
     refreshJournal();
 
-    // where do we resume?
-    if (state.finished && state.solved.length >= TOTAL) {
-      // they already reached the end — take them there, quietly
-      showRealEnding();
-      return;
-    }
-    // first unsolved challenge, in order
-    let idx = challenges.findIndex((c) => !isSolved(c.id));
-    if (idx === -1) { showFakeEnding(); return; } // all solved but not "finished"
-    showChallenge(idx);
+    // always open on the first challenge
+    showChallenge(0);
   }
 
   document.addEventListener("DOMContentLoaded", boot);
