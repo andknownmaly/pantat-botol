@@ -351,7 +351,7 @@
   /* ---------- small utilities ---------- */
   function wait(ms) { return new Promise((r) => setTimeout(r, ms)); }
 
-  /* ---------- ambient particle field ---------- */
+  /* ----------  particle field ---------- */
   function initParticles() {
     const canvas = document.getElementById("particles");
     const g = canvas.getContext("2d");
@@ -405,7 +405,7 @@
   /* ---------- controls: audio + restart + journal ---------- */
   function initControls() {
     const audioBtn = document.getElementById("audio-toggle");
-    let playing = false;
+    let playing = true;
     audioBtn.addEventListener("click", () => {
       if (!ambient) return;
       if (playing) { ambient.pause(); audioBtn.textContent = "♪ off"; playing = false; }
