@@ -20,9 +20,10 @@ All that remains is a faint trace of its fragrance—just enough to remind me th
 
 ---
 
+
 By the way...
 
-Congratulations on completing your thesis defense, **Fayya, A.Md.Kom. (UO).**
+Congratulations on completing your thesis defense, *"Fayya, A.Md.Kom. (UO)."*
 
 There are still chapters waiting to be written, but you've already crossed the milestone that once held everything back.
 
@@ -45,5 +46,6 @@ Not because I changed my mind—
 but because I finally saw what had been clear all along.
 
 **I forgot to clean my glasses before trying to see what was already clear.**
+
 
 — *Pantat Botol*
