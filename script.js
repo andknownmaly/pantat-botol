@@ -254,7 +254,11 @@
 
   /* ---------- the real ending: fade to black + markdown ---------- */
 
-  // The finale markdown — rendered EXACTLY as written, untouched.
+  // Where the finale text actually lives — edit this file to change the ending.
+  const ENDING_MD_URL = "markdown/ending.md";
+
+  // Fallback finale markdown, used only if the file above can't be loaded
+  // (e.g. opened over file:// where fetch is blocked).
   const ENDING_MD = [
     "--------------------------------",
     "",
@@ -276,7 +280,7 @@
     "",
     "Some hopes fall apart before they ever have the chance to become real.",
     "",
-    "All that remains is a faint trace of its fragrance just enough to remind me that thhoped to carry into a beautiful day.",
+    "All that remains is a faint trace of its fragrance just enough to remind me that there was once something I had hoped to carry into a beautiful day.",
     "",
     "--------------------------------",
   ].join("\n");
@@ -302,7 +306,16 @@
     return out.join("\n");
   }
 
-  function showRealEnding() {
+  // Load the finale markdown from its file, falling back to the embedded copy.
+  async function loadEndingMarkdown() {
+    try {
+      const res = await fetch(ENDING_MD_URL, { cache: "no-store" });
+      if (res.ok) return await res.text();
+    } catch (e) { /* file:// or missing file — fall back below */ }
+    return ENDING_MD;
+  }
+
+  async function showRealEnding() {
     state.finished = true;
     saveState(state);
     clearStage();
@@ -316,7 +329,7 @@
 
     const md = document.createElement("div");
     md.className = "md";
-    md.innerHTML = renderMarkdown(ENDING_MD);
+    md.innerHTML = renderMarkdown(await loadEndingMarkdown());
     veil.appendChild(md);
 
     // only one button: Restart Journey
@@ -443,6 +456,30 @@
     refreshJournal();
 
     showChallenge(0);
+  }
+
+  /* ---------- debug bridge (only active when ?debug is in the URL) ---------- */
+  // The actual tooling lives in debug/debug.js, which is gitignored and never
+  // shipped. This bridge stays inert unless you open the page with ?debug,
+  // e.g. index.html?debug — on production/GitHub the file is simply absent.
+  if (/[?&]debug(=|&|$)/.test(location.search)) {
+    window.__ROOM__ = {
+      challenges,
+      showChallenge,
+      showFakeEnding,
+      showRealEnding,
+      markSolved,
+      updateProgress,
+      refreshJournal,
+      loadEndingMarkdown,
+      renderMarkdown,
+      get state() { return state; },
+    };
+    const dbg = document.createElement("script");
+    dbg.src = "debug/debug.js";
+    dbg.onerror = () =>
+      console.warn("[debug] debug/debug.js not found — it is gitignored and not shipped.");
+    document.head.appendChild(dbg);
   }
 
   document.addEventListener("DOMContentLoaded", boot);

@@ -551,11 +551,16 @@ body.blackout #particles, body.blackout #topbar, body.blackout #journal, body.bl
   background: #000;
   opacity: 0;
   animation: veil-in 3s var(--ease) forwards;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 @keyframes veil-in { to { opacity: 1; } }
 
 /* markdown viewer */
 .md {
+  /* margin:auto centres short content, but lets tall content scroll fully
+     (align-items/justify-content:center would clip the overflow instead). */
+  margin: auto;
   max-width: 640px;
   text-align: left;
   line-height: 1.9;
